@@ -32,10 +32,41 @@ export const trackEvent = (eventName: string, props?: Record<string, string | nu
         });
       }
       
+      // 开发环境：输出日志以便调试
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[Plausible Event]', eventName, sanitizedProps);
+      }
+      
       window.plausible(eventName, { props: sanitizedProps });
     } catch (error) {
       console.error('Failed to track event:', eventName, error);
     }
+  } else {
+    // 如果 Plausible 未加载，输出警告
+    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+      console.warn('[Plausible] Script not loaded. Event not tracked:', eventName);
+    }
+  }
+};
+
+/**
+ * 将停留秒数转换为区间分类
+ * @param seconds 停留秒数
+ * @returns 区间分类字符串
+ */
+const getDurationRange = (seconds: number): string => {
+  if (seconds >= 1 && seconds <= 5) {
+    return '1-5秒';
+  } else if (seconds >= 6 && seconds <= 15) {
+    return '6-15秒';
+  } else if (seconds >= 16 && seconds <= 30) {
+    return '16-30秒';
+  } else if (seconds >= 31 && seconds <= 60) {
+    return '31-60秒';
+  } else if (seconds >= 61 && seconds <= 120) {
+    return '61-120秒';
+  } else {
+    return '120+秒';
   }
 };
 
@@ -53,7 +84,8 @@ export const trackVideoViewDuration = (
   trackEvent('Video View Duration', {
     video_id: videoId,
     video_title: videoTitle,
-    duration_seconds: durationSeconds, // 数字类型，便于在 Plausible 中计算平均值
+    duration_seconds: durationSeconds, // 保留精确秒数，用于计算平均值
+    duration_range: getDurationRange(durationSeconds), // 区间分类，便于查看分布
   });
 };
 
