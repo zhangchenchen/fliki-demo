@@ -12,6 +12,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { calculateMultipliers, saveToWaitlist } from '../utils';
+import { trackEmailSubmitted } from '../utils/analytics';
 import Toast from './Toast';
 
 interface ProfileProps {
@@ -63,6 +64,10 @@ const Profile: React.FC<ProfileProps> = ({ user, betHistory, events }) => {
         return;
     }
 
+    // 检查是否已经提交过（只追踪首次）
+    const hasSubmittedBefore = localStorage.getItem('battle_waitlist_email_tracked') === 'true';
+    const isReturningUser = !!localStorage.getItem('battle_waitlist_joined');
+
     setIsSubmitting(true);
     
     // 2. Artificial Delay (UX): Ensure spinner shows for at least 1 second so user sees activity
@@ -75,6 +80,20 @@ const Profile: React.FC<ProfileProps> = ({ user, betHistory, events }) => {
     
     setIsSubmitting(false);
     setIsSaved(true);
+    
+    // 追踪邮箱提交（只追踪首次）
+    if (!hasSubmittedBefore) {
+      trackEmailSubmitted(
+        'Profile Page',
+        totalAssetValue,
+        pendingWinnings,
+        betHistory.length,
+        isReturningUser
+      );
+      // 标记已追踪
+      localStorage.setItem('battle_waitlist_email_tracked', 'true');
+    }
+    
     setToast({ show: true, message: "You're on the list! Points secure.", type: 'success' });
   };
 
@@ -97,7 +116,7 @@ const Profile: React.FC<ProfileProps> = ({ user, betHistory, events }) => {
         {/* 1. Header */}
         <div className="flex flex-col items-center mb-6 z-10 shrink-0">
             <div className="w-20 h-20 rounded-full bg-zinc-900 border border-zinc-800 p-1 mb-3 relative">
-                 <img src={user.avatar} className="w-full h-full rounded-full grayscale opacity-60 object-cover" alt="Avatar" />
+                 <img src="/logo.png" className="w-full h-full rounded-full grayscale opacity-60 object-cover" alt="Avatar" />
                  <div className="absolute bottom-0 right-0 bg-black border border-zinc-700 rounded-full p-1.5">
                     <ShieldAlert size={12} className="text-zinc-500" />
                  </div>

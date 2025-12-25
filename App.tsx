@@ -60,6 +60,7 @@ const App: React.FC = () => {
           <VideoFeed 
             events={events} 
             userBets={bets}
+            user={user}
             onVote={handleInstantVote}
           />
         )}

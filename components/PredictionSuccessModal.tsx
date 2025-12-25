@@ -1,19 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { X, Package, Check, Loader2 } from 'lucide-react';
-import { saveToWaitlist } from '../utils';
+import { saveToWaitlist, calculateMultipliers } from '../utils';
+import { trackEmailSubmitted } from '../utils/analytics';
+import { User, Bet, EventData } from '../types';
 import Toast from './Toast';
 
 interface PredictionSuccessModalProps {
   onClose: () => void;
+  userBets: Bet[];
+  events: EventData[];
+  user: User;
 }
 
-const PredictionSuccessModal: React.FC<PredictionSuccessModalProps> = ({ onClose }) => {
+const PredictionSuccessModal: React.FC<PredictionSuccessModalProps> = ({ onClose, userBets, events, user }) => {
   const [showEffects, setShowEffects] = useState(true);
   
   // Input Handling
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  // Calculate pending winnings and total asset value
+  const pendingWinnings = userBets.reduce((acc, bet) => {
+    const event = events.find(e => e.id === bet.eventId);
+    if (!event || event.status === 'settled') return acc;
+    const { multA, multB } = calculateMultipliers(event.poolA, event.poolB);
+    const multiplier = bet.side === 'A' ? multA : multB;
+    return acc + Math.floor(bet.amount * multiplier);
+  }, 0);
+  const totalAssetValue = user.points + pendingWinnings;
 
   // Toast State
   const [toast, setToast] = useState<{ show: boolean; message: string; type: 'success' | 'error' }>({
@@ -37,6 +52,10 @@ const PredictionSuccessModal: React.FC<PredictionSuccessModalProps> = ({ onClose
          return;
      }
 
+     // 检查是否已经提交过（只追踪首次）
+     const hasSubmittedBefore = localStorage.getItem('battle_waitlist_email_tracked') === 'true';
+     const isReturningUser = !!localStorage.getItem('battle_waitlist_joined');
+
      setIsSubmitting(true);
      
      // 2. Artificial Delay (UX): Ensure spinner shows for at least 1 second
@@ -49,6 +68,20 @@ const PredictionSuccessModal: React.FC<PredictionSuccessModalProps> = ({ onClose
      
      setIsSubmitting(false);
      setIsSuccess(true);
+     
+     // 追踪邮箱提交（只追踪首次）
+     if (!hasSubmittedBefore) {
+       trackEmailSubmitted(
+         'Win Modal Bonus',
+         totalAssetValue,
+         pendingWinnings,
+         userBets.length,
+         isReturningUser
+       );
+       // 标记已追踪
+       localStorage.setItem('battle_waitlist_email_tracked', 'true');
+     }
+     
      setToast({ show: true, message: "Points Locked! You're on the list.", type: 'success' });
      
      // Close modal automatically after a moment of showing success
