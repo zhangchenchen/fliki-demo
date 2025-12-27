@@ -48,30 +48,26 @@ export const saveToWaitlist = async (email: string, source: string, points: numb
   if (GOOGLE_SHEET_API_URL.includes('YOUR_SCRIPT_ID_HERE')) {
     console.warn("Google Sheet API not configured. Data saved locally only.");
     await new Promise(resolve => setTimeout(resolve, 800));
-    return true; 
+    return true;
   }
 
   try {
     const data = { email, source, points };
-    console.log("Attempting to send data to Sheet:", data, "URL:", GOOGLE_SHEET_API_URL);
-    
-    // Using fetch with no-cors mode for Google Apps Script Web App
-    // Note: In no-cors mode, you CANNOT read the response status (it will always be opaque/0)
-    // But the request will be sent.
-    await fetch(GOOGLE_SHEET_API_URL, {
+    console.log("Attempting to send data to Sheet (Async):", data);
+
+    // FIRE AND FORGET: Don't await. Allow "lossy" behavior as requested.
+    fetch(GOOGLE_SHEET_API_URL, {
       method: "POST",
-      mode: "no-cors", 
+      mode: "no-cors",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
-    });
-    
-    console.log("Request sent (no-cors mode). Check Google Script Executions log.");
+    }).catch(e => console.error("Sheet Sync Error (Ignored):", e));
+
     return true;
   } catch (error) {
-    console.error("Error saving to sheet:", error);
-    // Return true anyway because we saved to LocalStorage, so from UX perspective it succeeded
+    console.error("Error launching sheet sync:", error);
     return true;
   }
 };
