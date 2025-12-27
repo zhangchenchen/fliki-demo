@@ -7,7 +7,7 @@ export const INITIAL_USER: User = {
   id: 'u1',
   name: 'PinoyMaster',
   avatar: 'https://i.pravatar.cc/150?u=pinoy',
-  points: 1000,
+  points: 500,
   loginStreak: 1
 };
 

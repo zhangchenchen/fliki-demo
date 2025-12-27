@@ -28,6 +28,7 @@ export interface Bet { // Internally still Bet for logic, but UI will show 'Vote
   eventId: string;
   side: 'A' | 'B';
   amount: number;
+  potentialWin?: number;
   timestamp: string;
 }
 
