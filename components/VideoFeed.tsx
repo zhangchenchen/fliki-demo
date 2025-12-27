@@ -195,6 +195,13 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
         const userBet = userBets.find(b => b.eventId === event.id);
         const hasVoted = !!userBet;
 
+        // Smart Preload Logic:
+        // Preload "auto" for current video and the immediate next one.
+        // Preload "none" for others to save bandwidth.
+        const currentIndex = events.findIndex(e => e.id === activeVideoId);
+        const eventIndex = events.findIndex(e => e.id === event.id);
+        const shouldPreload = eventIndex === currentIndex || eventIndex === currentIndex + 1;
+
         return (
           <div
             key={event.id}
@@ -206,10 +213,12 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
             <video
               id={`v-${event.id}`}
               src={event.videoUrl}
+              poster={event.posterUrl}
               className="w-full h-full object-cover"
               loop
               playsInline
               muted={isMuted}
+              preload={shouldPreload ? "auto" : "none"}
             />
 
             {/* Mute Toggle Control & Hint */}

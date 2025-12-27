@@ -45,17 +45,9 @@ const Profile: React.FC<ProfileProps> = ({ user, betHistory, events }) => {
     }, []);
 
     // 1. Calculate Potential Value
-    const pendingWinnings = betHistory.reduce((acc, bet) => {
-        const event = events.find(e => e.id === bet.eventId);
-        // Only count ongoing bets towards "Potential"
-        if (!event || event.status === 'settled') return acc;
-
-        const { multA, multB } = calculateMultipliers(event.poolA, event.poolB);
-        const multiplier = bet.side === 'A' ? multA : multB;
-        return acc + Math.floor(bet.amount * multiplier);
-    }, 0);
-
-    const totalAssetValue = user.points + pendingWinnings;
+    // Logic V5: Base 500 + 500 Reward if voted once (Ignore Pending Winnings)
+    const hasVoted = betHistory.length > 0;
+    const totalAssetValue = 500 + (hasVoted ? 500 : 0);
 
     const handleSaveProgress = async () => {
         // 1. Validation
@@ -86,7 +78,7 @@ const Profile: React.FC<ProfileProps> = ({ user, betHistory, events }) => {
             trackEmailSubmitted(
                 'Profile Page',
                 totalAssetValue,
-                pendingWinnings,
+                0, // pendingWinnings no longer tracked for simplification
                 betHistory.length,
                 isReturningUser
             );
