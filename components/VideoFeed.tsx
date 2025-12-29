@@ -4,6 +4,7 @@ import { EventData, Bet, User } from '../types';
 import { calculateMultipliers, triggerFeedback } from '../utils';
 import { trackVideoViewDuration, trackVoteClicked } from '../utils/analytics';
 import PredictionSuccessModal from './PredictionSuccessModal';
+import { Stream } from '@cloudflare/stream-react';
 
 interface VideoFeedProps {
   events: EventData[];
@@ -63,7 +64,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
           const previousEvent = events.find(e => e.id === previousVideoId);
           if (previousEvent) {
             trackVideoViewDuration(
-              previousVideoId,
+              previousVideoId as string,
               previousEvent.title || '',
               durationSeconds
             );
@@ -111,7 +112,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
             if (currentEvent) {
               // 使用 sendBeacon 确保数据发送成功（即使页面关闭）
               trackVideoViewDuration(
-                activeVideoId,
+                activeVideoId as string,
                 currentEvent.title,
                 durationSeconds
               );
@@ -130,7 +131,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
             const currentEvent = events.find(e => e.id === activeVideoId);
             if (currentEvent) {
               trackVideoViewDuration(
-                activeVideoId,
+                activeVideoId as string,
                 currentEvent.title,
                 durationSeconds
               );
@@ -202,6 +203,10 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
         const eventIndex = events.findIndex(e => e.id === event.id);
         const shouldPreload = eventIndex === currentIndex || eventIndex === currentIndex + 1;
 
+        // Check if the video is from Cloudflare Stream
+        const isStreamVideo = event.videoUrl.startsWith('stream://') || (!event.videoUrl.startsWith('http') && event.videoUrl.length > 20);
+        const streamSrc = isStreamVideo ? event.videoUrl.replace('stream://', '') : '';
+
         return (
           <div
             key={event.id}
@@ -210,16 +215,31 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
           >
 
             {/* Immersive Video Layer */}
-            <video
-              id={`v-${event.id}`}
-              src={event.videoUrl}
-              poster={event.posterUrl}
-              className="w-full h-full object-cover"
-              loop
-              playsInline
-              muted={isMuted}
-              preload={shouldPreload ? "auto" : "none"}
-            />
+            {isStreamVideo ? (
+              <div className="w-full h-full">
+                <Stream
+                  id={`v-${event.id}`}
+                  src={streamSrc}
+                  className="w-full h-full object-cover"
+                  loop
+                  preload={shouldPreload ? "auto" : "none"}
+                  autoplay={event.id === activeVideoId}
+                  muted={isMuted}
+                  controls={false}
+                />
+              </div>
+            ) : (
+              <video
+                id={`v-${event.id}`}
+                src={event.videoUrl}
+                poster={event.posterUrl}
+                className="w-full h-full object-cover"
+                loop
+                playsInline
+                muted={isMuted}
+                preload={shouldPreload ? "auto" : "none"}
+              />
+            )}
 
             {/* Mute Toggle Control & Hint */}
             <div className="absolute top-28 right-4 z-30 flex items-center gap-2">
