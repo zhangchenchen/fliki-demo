@@ -201,6 +201,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
         const userBet = userBets.find(b => b.eventId === event.id);
         const currentIndex = events.findIndex(e => e.id === activeVideoId);
         const eventIndex = events.findIndex(e => e.id === event.id);
+        // Conservative preload: only current + next video (weak network friendly)
         const shouldPreload = eventIndex === currentIndex || eventIndex === currentIndex + 1;
         const isActive = event.id === activeVideoId;
 

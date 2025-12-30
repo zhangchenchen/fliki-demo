@@ -103,9 +103,22 @@ const HLSVideo = forwardRef<HLSVideoHandle, HLSVideoProps>(({
             hls = new Hls({
                 enableWorker: true,
                 lowLatencyMode: false,
-                // Optimize for mobile networks
-                maxBufferLength: 30,
-                maxMaxBufferLength: 60,
+                // === Weak network optimization (Philippines) ===
+                startLevel: 0,  // Start with lowest quality for instant playback
+                abrEwmaDefaultEstimate: 500000, // 500Kbps conservative estimate for weak networks
+                // Reduce buffer requirements for faster initial playback
+                maxBufferLength: 15,  // Reduced from 30s
+                maxMaxBufferLength: 30, // Reduced from 60s
+                maxBufferHole: 1,  // Tolerate 1s gaps
+                // Faster ABR switching
+                abrEwmaFastLive: 3,
+                abrEwmaSlowLive: 9,
+                abrBandWidthFactor: 0.8, // More aggressive quality downgrade
+                abrBandWidthUpFactor: 0.5, // Conservative quality upgrade
+                // Error recovery
+                fragLoadingMaxRetry: 6,
+                manifestLoadingMaxRetry: 4,
+                levelLoadingMaxRetry: 4,
             });
 
             hlsRef.current = hls;
