@@ -41,3 +41,43 @@
 10，Maaari bang lumagpas sa $100,000 ang BTC sa Enero 2026?
 
 视频链接：stream://6aaf0634294703e24c8d84658053c573
+
+11, Aabot ba ng ₱300M ang 'Call Me Mother' by Jan 10?"
+
+视频链接：stream://b1537277c45ff9866364cf12c55b9e99
+
+12，May bagong 'Bigating Endorsement' bang i-aannounce si Vice Ganda by Jan 15?
+
+视频链接：stream://57f2e5e65ad33abb4b73354d10485a6a
+
+13，Eumir Marcial: Goodbye SEA Games, Hello World Title by Jan 31?
+
+视频链接：stream://6e92c44b55137089467bb7fe6a2013d2
+
+14，₱200M Challenge: Kakayanin ba ng 'I'm Perfect' bago mag-Jan 15?
+
+视频链接：stream://06a64a744d02365dce259ce937c27d8b
+
+15，Tuloy ang Taray: Mag-aannounce ba ng Season 2 ang 'Kontrabida Academy' by Jan 15?
+
+视频链接：stream://40c4b33f370c20521126f15317dfeca2
+
+16，Gaya sa Pasig: May city bang susunod sa 'Gambling Ad Ban' by Jan 10?
+
+视频链接：stream://965abedc6410b735c940c64a9479f2ef
+
+17，M7 Debut: Makaka-buena mano ba ng panalo ang Team Liquid PH?
+
+视频链接：stream://aa1c3c977e32a00e45a3ca6b96b62cf6
+
+18，Holt Check: Aabot ba ng 20 Points si Stephen Holt sa Semis Game 1?
+
+视频链接：stream://b63e4c539df500770aea44b5df36260a
+
+19，Chef Curry Special: Aabot ba ng 30+ Points si Steph ngayong New Year's Eve?
+
+视频链接：stream://f195bd50c3a117391c3f2a49322543ec
+
+
+
+
