@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Volume2, VolumeX, ChevronsDown, Lock } from 'lucide-react';
+import { Volume2, VolumeX, ChevronsDown, Lock, Play } from 'lucide-react';
 import { EventData, Bet, User } from '../types';
 import { calculateMultipliers, triggerFeedback } from '../utils';
 import { trackVideoViewDuration, trackVoteClicked } from '../utils/analytics';
 import PredictionSuccessModal from './PredictionSuccessModal';
-import { Stream } from '@cloudflare/stream-react';
+import HLSVideo, { HLSVideoHandle } from './HLSVideo';
 
 interface VideoFeedProps {
   events: EventData[];
@@ -18,8 +18,12 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
   const [isMuted, setIsMuted] = useState(true);
   const [activeVideoId, setActiveVideoId] = useState<string>(events[0]?.id || '');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [showVoteTooltip, setShowVoteTooltip] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  // Store refs for all HLS video players
+  const hlsVideoRefs = useRef<Map<string, HLSVideoHandle | null>>(new Map());
   // 存储每个视频的开始观看时间（用于计算停留时长）
   const videoStartTimes = useRef<Map<string, number>>(new Map());
   // 存储每个视频是否已经投过票（用于 is_first_vote）
@@ -47,7 +51,67 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
     return () => observer.disconnect();
   }, [events]);
 
-  // Effect to track video view duration and manage play/pause
+  // Reset pause state when video changes
+  useEffect(() => {
+    setIsPaused(false);
+  }, [activeVideoId]);
+
+  // Handle play/pause when activeVideoId changes
+  useEffect(() => {
+    // Pause all videos except the active one
+    hlsVideoRefs.current.forEach((ref, id) => {
+      if (id === activeVideoId) {
+        ref?.play();
+      } else {
+        ref?.pause();
+      }
+    });
+
+    // Handle native video elements
+    events.forEach(event => {
+      const videoEl = document.getElementById(`v-${event.id}`) as HTMLVideoElement;
+      if (videoEl) {
+        if (event.id === activeVideoId) {
+          videoEl.play().catch(() => { });
+        } else {
+          videoEl.pause();
+          videoEl.currentTime = 0;
+        }
+      }
+    });
+  }, [activeVideoId, events]);
+
+  // Sync mute state to all players
+  useEffect(() => {
+    hlsVideoRefs.current.forEach((ref) => {
+      ref?.setMuted(isMuted);
+      ref?.setVolume(isMuted ? 0 : 1);
+    });
+
+    events.forEach(event => {
+      const videoEl = document.getElementById(`v-${event.id}`) as HTMLVideoElement;
+      if (videoEl) {
+        videoEl.muted = isMuted;
+        videoEl.volume = isMuted ? 0 : 1;
+      }
+    });
+  }, [isMuted, events]);
+
+  // Handle isPaused state changes
+  useEffect(() => {
+    const activeRef = hlsVideoRefs.current.get(activeVideoId);
+    const nativeVideo = document.getElementById(`v-${activeVideoId}`) as HTMLVideoElement;
+
+    if (isPaused) {
+      activeRef?.pause();
+      nativeVideo?.pause();
+    } else {
+      activeRef?.play();
+      nativeVideo?.play().catch(() => { });
+    }
+  }, [isPaused, activeVideoId]);
+
+  // Effect to track video view duration
   useEffect(() => {
     const previousVideoId = videoStartTimes.current.size > 0
       ? Array.from(videoStartTimes.current.keys())[videoStartTimes.current.size - 1]
@@ -80,104 +144,48 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
     if (activeVideoId && !videoStartTimes.current.has(activeVideoId)) {
       videoStartTimes.current.set(activeVideoId, Date.now());
     }
-
-    // Effect to manage play/pause based on activeVideoId
-    events.forEach((event) => {
-      const videoEl = document.getElementById(`v-${event.id}`) as HTMLVideoElement;
-      if (!videoEl) return;
-
-      if (event.id === activeVideoId) {
-        const playPromise = videoEl.play();
-        if (playPromise !== undefined) {
-          playPromise.catch((error) => {
-            console.log('Autoplay prevented:', error);
-          });
-        }
-      } else {
-        videoEl.pause();
-        videoEl.currentTime = 0; // Reset video to start
-      }
-    });
   }, [activeVideoId, events]);
 
-  // 页面关闭或隐藏时，追踪当前视频的停留时长
+  // Check for first-time user guide
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (activeVideoId) {
-        const startTime = videoStartTimes.current.get(activeVideoId);
-        if (startTime) {
-          const durationSeconds = Math.floor((Date.now() - startTime) / 1000);
-          if (durationSeconds >= 1) {
-            const currentEvent = events.find(e => e.id === activeVideoId);
-            if (currentEvent) {
-              // 使用 sendBeacon 确保数据发送成功（即使页面关闭）
-              trackVideoViewDuration(
-                activeVideoId as string,
-                currentEvent.title,
-                durationSeconds
-              );
-            }
-          }
-        }
-      }
-    };
-
-    const handleVisibilityChange = () => {
-      if (document.hidden && activeVideoId) {
-        const startTime = videoStartTimes.current.get(activeVideoId);
-        if (startTime) {
-          const durationSeconds = Math.floor((Date.now() - startTime) / 1000);
-          if (durationSeconds >= 1) {
-            const currentEvent = events.find(e => e.id === activeVideoId);
-            if (currentEvent) {
-              trackVideoViewDuration(
-                activeVideoId as string,
-                currentEvent.title,
-                durationSeconds
-              );
-            }
-          }
-          // 重置开始时间（用户返回时会重新记录）
-          videoStartTimes.current.set(activeVideoId, Date.now());
-        }
-      }
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [activeVideoId, events]);
+    const hasSeenGuide = localStorage.getItem('has_seen_vote_guide');
+    if (!hasSeenGuide) {
+      // Small delay to ensure UI is ready
+      const timer = setTimeout(() => {
+        setShowVoteTooltip(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   const handleVoteAction = (eventId: string, side: 'A' | 'B') => {
     triggerFeedback();
 
-    // 获取事件信息用于追踪
+    if (showVoteTooltip) {
+      setShowVoteTooltip(false);
+      localStorage.setItem('has_seen_vote_guide', 'true');
+    }
+
     const event = events.find(e => e.id === eventId);
     if (event) {
       const { percentA, percentB } = calculateMultipliers(event.poolA, event.poolB);
       const isFirstVote = !videoVoteStatus.current.get(eventId);
 
-      // 追踪投票事件
       trackVoteClicked(
         eventId,
         event.title,
         side,
         side === 'A' ? event.optionA : event.optionB,
-        10, // Default bet amount
+        10,
         percentA,
         percentB,
         isFirstVote
       );
 
-      // 标记该视频已投票
       videoVoteStatus.current.set(eventId, true);
     }
 
-    onVote(eventId, side, 10); // Default 10 points as per PRD
+    onVote(eventId, side, 10);
     setShowSuccessModal(true);
   };
 
@@ -185,6 +193,12 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
     e.stopPropagation();
     setIsMuted(!isMuted);
   };
+
+  const handleTogglePlay = () => {
+    setIsPaused(!isPaused);
+  };
+
+  const activeEvent = events.find(e => e.id === activeVideoId);
 
   return (
     <div
@@ -196,9 +210,6 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
         const userBet = userBets.find(b => b.eventId === event.id);
         const hasVoted = !!userBet;
 
-        // Smart Preload Logic:
-        // Preload "auto" for current video and the immediate next one.
-        // Preload "none" for others to save bandwidth.
         const currentIndex = events.findIndex(e => e.id === activeVideoId);
         const eventIndex = events.findIndex(e => e.id === event.id);
         const shouldPreload = eventIndex === currentIndex || eventIndex === currentIndex + 1;
@@ -207,38 +218,51 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
         const isStreamVideo = event.videoUrl.startsWith('stream://') || (!event.videoUrl.startsWith('http') && event.videoUrl.length > 20);
         const streamSrc = isStreamVideo ? event.videoUrl.replace('stream://', '') : '';
 
+        // Determine if this specific card should show the tooltip
+        // Show only on the active video if global showVoteTooltip is true
+        const shouldShowTooltip = showVoteTooltip && event.id === activeVideoId && !hasVoted;
+
         return (
           <div
             key={event.id}
             data-id={event.id}
-            className="video-snap-item relative w-full h-full snap-center flex items-center justify-center bg-zinc-900 overflow-hidden"
+            onClick={handleTogglePlay}
+            className="video-snap-item relative w-full h-full snap-center flex items-center justify-center bg-zinc-900 overflow-hidden cursor-pointer"
           >
 
             {/* Immersive Video Layer */}
             {isStreamVideo ? (
-              <div className="w-full h-full">
-                <Stream
-                  id={`v-${event.id}`}
-                  src={streamSrc}
-                  className="w-full h-full object-cover"
-                  loop
-                  preload={shouldPreload ? "auto" : "none"}
-                  autoplay={event.id === activeVideoId}
-                  muted={isMuted}
-                  controls={false}
-                />
-              </div>
+              <HLSVideo
+                ref={(ref) => {
+                  if (ref) hlsVideoRefs.current.set(event.id, ref);
+                }}
+                streamId={streamSrc}
+                poster={event.posterUrl}
+                muted={isMuted}
+                autoplay={event.id === activeVideoId && !isPaused}
+                loop={true}
+                className="w-full h-full object-cover pointer-events-none"
+              />
             ) : (
               <video
                 id={`v-${event.id}`}
                 src={event.videoUrl}
                 poster={event.posterUrl}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover pointer-events-none"
                 loop
                 playsInline
                 muted={isMuted}
                 preload={shouldPreload ? "auto" : "none"}
               />
+            )}
+
+            {/* Play Icon Overlay */}
+            {isPaused && event.id === activeVideoId && (
+              <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+                <div className="w-16 h-16 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center animate-in zoom-in duration-200">
+                  <Play size={40} className="text-white fill-white ml-1" />
+                </div>
+              </div>
             )}
 
             {/* Mute Toggle Control & Hint */}
@@ -266,6 +290,16 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
 
             {/* Instant VS Controls (PRD v4.0 Core Logic) */}
             <div className="absolute bottom-6 left-4 right-4 z-20">
+              {/* Tooltip Guide */}
+              {shouldShowTooltip && (
+                <div className="absolute -top-16 left-0 right-0 z-50 flex flex-col items-center animate-bounce pointer-events-none">
+                  <div className="bg-white text-black px-4 py-2 rounded-full shadow-[0_0_25px_rgba(255,255,255,0.4)] flex items-center gap-2">
+                    <span className="text-xs font-black uppercase tracking-wider">Click to Predict & Win</span>
+                  </div>
+                  <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-white mt-[1px]" />
+                </div>
+              )}
+
               <div className="flex flex-col gap-4">
                 <div className="flex items-end gap-3 px-2">
                   <div className="flex-1">
@@ -276,11 +310,19 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
 
                 {!hasVoted ? (
                   /* --- VOTING STATE --- */
-                  <div className="flex h-20 bg-zinc-950/80 backdrop-blur-lg rounded-2xl border border-white/10 overflow-hidden relative">
+                  <div className={`
+                    flex h-20 bg-zinc-950/80 backdrop-blur-lg rounded-2xl border border-white/10 overflow-hidden relative transition-all duration-500
+                    ${shouldShowTooltip ? 'ring-4 ring-white/60 shadow-[0_0_50px_rgba(255,255,255,0.4)]' : ''}
+                  `}>
+                    {/* Pulse Overlay for Guide */}
+                    {shouldShowTooltip && (
+                      <div className="absolute inset-0 bg-white/20 animate-pulse pointer-events-none z-0" />
+                    )}
+
                     {/* Option A (Left Red) */}
                     <button
                       onClick={(e) => { e.stopPropagation(); handleVoteAction(event.id, 'A'); }}
-                      className="flex-1 bg-gradient-to-r from-red-600/40 to-transparent flex flex-col items-center justify-center active:scale-95 transition-transform"
+                      className="flex-1 bg-gradient-to-r from-red-600/40 to-transparent flex flex-col items-center justify-center active:scale-95 transition-transform z-10"
                     >
                       <span className="text-[10px] font-black text-red-400 mb-1 uppercase italic">TEAM {event.optionA}</span>
                       <div className="flex items-baseline gap-1">
@@ -289,12 +331,12 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
                     </button>
 
                     {/* Center VS Divider */}
-                    <div className="w-px h-10 self-center bg-zinc-800" />
+                    <div className="w-px h-10 self-center bg-zinc-800 z-10" />
 
                     {/* Option B (Right Blue) */}
                     <button
                       onClick={(e) => { e.stopPropagation(); handleVoteAction(event.id, 'B'); }}
-                      className="flex-1 bg-gradient-to-l from-blue-600/40 to-transparent flex flex-col items-center justify-center active:scale-95 transition-transform"
+                      className="flex-1 bg-gradient-to-l from-blue-600/40 to-transparent flex flex-col items-center justify-center active:scale-95 transition-transform z-10"
                     >
                       <span className="text-[10px] font-black text-blue-400 mb-1 uppercase italic">TEAM {event.optionB}</span>
                       <div className="flex items-baseline gap-1">
@@ -303,7 +345,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
                     </button>
 
                     {/* Bottom Progress Bar */}
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-zinc-800 flex">
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-zinc-800 flex z-10">
                       <div className="h-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,1)] transition-all duration-700" style={{ width: `${percentA}%` }} />
                       <div className="h-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,1)] transition-all duration-700" style={{ width: `${percentB}%` }} />
                     </div>
