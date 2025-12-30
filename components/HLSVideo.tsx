@@ -38,6 +38,10 @@ const HLSVideo = forwardRef<HLSVideoHandle, HLSVideoProps>(({
     // Expose control methods to parent component
     useImperativeHandle(ref, () => ({
         play: async () => {
+            // Trigger segment loading when play is called (for autoStartLoad: false)
+            if (hlsRef.current) {
+                hlsRef.current.startLoad();
+            }
             if (videoRef.current) {
                 try {
                     await videoRef.current.play();
@@ -103,6 +107,8 @@ const HLSVideo = forwardRef<HLSVideoHandle, HLSVideoProps>(({
             hls = new Hls({
                 enableWorker: true,
                 lowLatencyMode: false,
+                // === Manifest-only preload (no segment download until play) ===
+                autoStartLoad: false, // Only load manifest, wait for startLoad() to fetch segments
                 // === Weak network optimization (Philippines) ===
                 startLevel: 0,  // Start with lowest quality for instant playback
                 abrEwmaDefaultEstimate: 500000, // 500Kbps conservative estimate for weak networks
