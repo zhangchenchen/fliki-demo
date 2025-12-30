@@ -8,6 +8,7 @@ interface HLSVideoProps {
     autoplay: boolean;
     loop?: boolean;
     className?: string;
+    shouldLoad?: boolean;
     onReady?: () => void;
 }
 
@@ -28,6 +29,7 @@ const HLSVideo = forwardRef<HLSVideoHandle, HLSVideoProps>(({
     autoplay,
     loop = true,
     className = '',
+    shouldLoad = false,
     onReady
 }, ref) => {
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -40,7 +42,7 @@ const HLSVideo = forwardRef<HLSVideoHandle, HLSVideoProps>(({
                 try {
                     await videoRef.current.play();
                 } catch (e) {
-                    console.log('Play failed:', e);
+                    // Ignore play errors (AbortError, etc)
                 }
             }
         },
@@ -63,27 +65,42 @@ const HLSVideo = forwardRef<HLSVideoHandle, HLSVideoProps>(({
         getVideoElement: () => videoRef.current
     }));
 
-    // Store autoplay value at mount time to avoid re-triggering on changes
+    // Store autoplay value to handle cleanup/re-init correctly
     const initialAutoplayRef = useRef(autoplay);
+    // Update ref when prop changes
+    useEffect(() => {
+        initialAutoplayRef.current = autoplay;
+    }, [autoplay]);
 
     useEffect(() => {
         const video = videoRef.current;
-        if (!video || !streamId) return;
+        if (!video || !streamId || !shouldLoad) return;
 
         const hlsUrl = `https://customer-${CUSTOMER_ID}.cloudflarestream.com/${streamId}/manifest/video.m3u8`;
+        let hls: Hls | null = null;
 
         // Check if HLS is supported natively (Safari)
         if (video.canPlayType('application/vnd.apple.mpegurl')) {
             video.src = hlsUrl;
-            video.addEventListener('loadedmetadata', () => {
+            const handleLoadedMetadata = () => {
                 if (initialAutoplayRef.current) {
                     video.play().catch(() => { });
                 }
                 onReady?.();
-            });
+            };
+            video.addEventListener('loadedmetadata', handleLoadedMetadata);
+
+            return () => {
+                video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+                // Don't clear src here to keep the last frame if used as poster substitute? 
+                // Actually clearing src might be safer to stop buffering.
+                video.pause();
+                video.src = '';
+                video.load();
+            };
         } else if (Hls.isSupported()) {
             // Use HLS.js for other browsers
-            const hls = new Hls({
+            hls = new Hls({
                 enableWorker: true,
                 lowLatencyMode: false,
                 // Optimize for mobile networks
@@ -106,9 +123,9 @@ const HLSVideo = forwardRef<HLSVideoHandle, HLSVideoProps>(({
                 if (data.fatal) {
                     console.error('HLS fatal error:', data);
                     if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-                        hls.startLoad();
+                        hls?.startLoad();
                     } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
-                        hls.recoverMediaError();
+                        hls?.recoverMediaError();
                     }
                 }
             });
@@ -117,12 +134,12 @@ const HLSVideo = forwardRef<HLSVideoHandle, HLSVideoProps>(({
         }
 
         return () => {
-            if (hlsRef.current) {
-                hlsRef.current.destroy();
+            if (hls) {
+                hls.destroy();
                 hlsRef.current = null;
             }
         };
-    }, [streamId, onReady]); // Removed autoplay from dependencies
+    }, [streamId, onReady, shouldLoad]);
 
     // Sync muted state
     useEffect(() => {
@@ -154,7 +171,7 @@ const HLSVideo = forwardRef<HLSVideoHandle, HLSVideoProps>(({
             muted={muted}
             loop={loop}
             playsInline
-            preload="auto"
+            preload="none" // Controlled by HLS init
         />
     );
 });
