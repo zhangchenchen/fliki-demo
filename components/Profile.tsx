@@ -108,7 +108,7 @@ const Profile: React.FC<ProfileProps> = ({ user, betHistory, events }) => {
             {/* 1. Header */}
             <div className="flex flex-col items-center mb-6 z-10 shrink-0">
                 <div className="w-20 h-20 rounded-full bg-zinc-900 border border-zinc-800 p-1 mb-3 relative">
-                    <img src="/logo.png" className="w-full h-full rounded-full grayscale opacity-60 object-cover" alt="Avatar" />
+                    <img src="/logo.webp" className="w-full h-full rounded-full grayscale opacity-60 object-cover" alt="Avatar" />
                     <div className="absolute bottom-0 right-0 bg-black border border-zinc-700 rounded-full p-1.5">
                         <ShieldAlert size={12} className="text-zinc-500" />
                     </div>
