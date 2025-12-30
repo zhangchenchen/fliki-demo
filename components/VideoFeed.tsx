@@ -19,7 +19,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
   const [activeVideoId, setActiveVideoId] = useState<string>(events[0]?.id || '');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [showVoteTooltip, setShowVoteTooltip] = useState(false);
+
 
   const containerRef = useRef<HTMLDivElement>(null);
   // Store refs for all HLS video players
@@ -154,25 +154,11 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
     }
   }, [activeVideoId, events]);
 
-  // Check for first-time user guide
-  useEffect(() => {
-    const hasSeenGuide = localStorage.getItem('has_seen_vote_guide');
-    if (!hasSeenGuide) {
-      // Small delay to ensure UI is ready
-      const timer = setTimeout(() => {
-        setShowVoteTooltip(true);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, []);
+  // Check for first-time user guide logic removed
+
 
   const handleVoteAction = useCallback((eventId: string, side: 'A' | 'B') => {
     triggerFeedback();
-
-    if (showVoteTooltip) {
-      setShowVoteTooltip(false);
-      localStorage.setItem('has_seen_vote_guide', 'true');
-    }
 
     const event = events.find(e => e.id === eventId);
     if (event) {
@@ -195,7 +181,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
 
     onVote(eventId, side, 10);
     setShowSuccessModal(true);
-  }, [events, onVote, showVoteTooltip]);
+  }, [events, onVote]);
 
   const toggleMute = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -227,7 +213,6 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
             isPaused={isPaused}
             isMuted={isMuted}
             shouldPreload={shouldPreload}
-            showVoteTooltip={showVoteTooltip}
             onTogglePlay={handleTogglePlay}
             onToggleMute={toggleMute}
             onVoteAction={handleVoteAction}

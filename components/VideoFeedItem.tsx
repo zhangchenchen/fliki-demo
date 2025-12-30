@@ -11,7 +11,7 @@ interface VideoFeedItemProps {
     isPaused: boolean;
     isMuted: boolean;
     shouldPreload: boolean;
-    showVoteTooltip: boolean;
+
     onTogglePlay: () => void;
     onToggleMute: (e: React.MouseEvent) => void;
     onVoteAction: (eventId: string, side: 'A' | 'B') => void;
@@ -25,7 +25,7 @@ const VideoFeedItem: React.FC<VideoFeedItemProps> = memo(({
     isPaused,
     isMuted,
     shouldPreload,
-    showVoteTooltip,
+
     onTogglePlay,
     onToggleMute,
     onVoteAction,
@@ -38,8 +38,7 @@ const VideoFeedItem: React.FC<VideoFeedItemProps> = memo(({
     const isStreamVideo = event.videoUrl.startsWith('stream://') || (!event.videoUrl.startsWith('http') && event.videoUrl.length > 20);
     const streamSrc = isStreamVideo ? event.videoUrl.replace('stream://', '') : '';
 
-    // Determine if this specific card should show the tooltip
-    const shouldShowTooltip = showVoteTooltip && isActive && !hasVoted;
+
 
     return (
         <div
@@ -106,15 +105,7 @@ const VideoFeedItem: React.FC<VideoFeedItemProps> = memo(({
 
             {/* Instant VS Controls (PRD v4.0 Core Logic) */}
             <div className="absolute bottom-6 left-4 right-4 z-20">
-                {/* Tooltip Guide */}
-                {shouldShowTooltip && (
-                    <div className="absolute -top-16 left-0 right-0 z-50 flex flex-col items-center animate-bounce pointer-events-none">
-                        <div className="bg-white text-black px-4 py-2 rounded-full shadow-[0_0_25px_rgba(255,255,255,0.4)] flex items-center gap-2">
-                            <span className="text-xs font-black uppercase tracking-wider">Click to Predict & Win</span>
-                        </div>
-                        <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-white mt-[1px]" />
-                    </div>
-                )}
+
 
                 <div className="flex flex-col gap-4">
                     <div className="flex items-end gap-3 px-2">
@@ -128,12 +119,10 @@ const VideoFeedItem: React.FC<VideoFeedItemProps> = memo(({
                         /* --- VOTING STATE --- */
                         <div className={`
                 flex h-20 bg-zinc-950/80 backdrop-blur-lg rounded-2xl border border-white/10 overflow-hidden relative transition-all duration-500
-                ${shouldShowTooltip ? 'ring-4 ring-white/60 shadow-[0_0_50px_rgba(255,255,255,0.4)]' : ''}
+                ${'' /* Tooltip glow removed */}
               `}>
                             {/* Pulse Overlay for Guide */}
-                            {shouldShowTooltip && (
-                                <div className="absolute inset-0 bg-white/20 animate-pulse pointer-events-none z-0" />
-                            )}
+
 
                             {/* Option A (Left Red) */}
                             <button
