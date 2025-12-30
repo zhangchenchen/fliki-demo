@@ -9,7 +9,11 @@ import {
     Trophy,
     ShoppingBag,
     CreditCard,
-    Loader2
+    Loader2,
+    Twitter,
+    MessageCircle,
+    Disc,
+    ChevronRight
 } from 'lucide-react';
 import { calculateMultipliers, saveToWaitlist } from '../utils';
 import { trackEmailSubmitted } from '../utils/analytics';
@@ -192,6 +196,52 @@ const Profile: React.FC<ProfileProps> = ({ user, betHistory, events }) => {
                         <div className="text-[10px] text-zinc-500">YOU'RE ON THE LIST WITH {email}</div>
                     </div>
                 )}
+            </div>
+
+            {/* 3.5. Community Section */}
+            <div className="w-full max-w-sm mt-6 z-10 shrink-0">
+                <div className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl overflow-hidden backdrop-blur-sm">
+                    <div className="divide-y divide-zinc-800/50">
+                        {/* Twitter */}
+                        <a href="https://x.com/Flick_Market" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between px-4 py-4 hover:bg-zinc-800/50 transition-colors group">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-black border border-zinc-800 flex items-center justify-center text-zinc-400 group-hover:text-white group-hover:border-zinc-600 transition-colors">
+                                    <Twitter size={14} />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-xs font-bold text-zinc-300 group-hover:text-white transition-colors">Twitter (X)</span>
+                                </div>
+                            </div>
+                            <ChevronRight size={14} className="text-zinc-600 group-hover:text-zinc-400 transition-colors" />
+                        </a>
+
+                        {/* Messenger */}
+                        <a href="https://m.me/cm/AbZmC-6qs0iHJ-AR/?send_source=cm%3Acopy_invite_link" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between px-4 py-4 hover:bg-zinc-800/50 transition-colors group">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-black border border-zinc-800 flex items-center justify-center text-zinc-400 group-hover:text-blue-500 group-hover:border-blue-900/50 transition-colors">
+                                    <MessageCircle size={14} />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-xs font-bold text-zinc-300 group-hover:text-white transition-colors">Messenger Group</span>
+                                </div>
+                            </div>
+                            <ChevronRight size={14} className="text-zinc-600 group-hover:text-zinc-400 transition-colors" />
+                        </a>
+
+                        {/* Discord */}
+                        <a href="https://discord.gg/URNRmK46R" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between px-4 py-4 hover:bg-zinc-800/50 transition-colors group">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-black border border-zinc-800 flex items-center justify-center text-zinc-400 group-hover:text-indigo-400 group-hover:border-indigo-900/50 transition-colors">
+                                    <Disc size={14} />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-xs font-bold text-zinc-300 group-hover:text-white transition-colors">Discord</span>
+                                </div>
+                            </div>
+                            <ChevronRight size={14} className="text-zinc-600 group-hover:text-zinc-400 transition-colors" />
+                        </a>
+                    </div>
+                </div>
             </div>
 
             {/* 4. Locked Footer Icons */}
