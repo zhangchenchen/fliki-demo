@@ -12,83 +12,9 @@ export const INITIAL_USER: User = {
 };
 
 export const INITIAL_EVENTS: EventData[] = [
+  // 1. Ivana Alawi (原 e6)
   {
     id: 'e1',
-    title: 'Maaari bang ipagtanggol ng isang Philippine team ang titulo sa M7 na ito？',
-    description: 'Will a Philippine team defend the title in this M7?',
-    videoUrl: 'stream://76e77896e8275bab3be03684a5bb1586',
-    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/76e77896e8275bab3be03684a5bb1586/thumbnails/thumbnail.jpg?time=1s&height=600',
-    brandName: 'MLBB M7',
-    optionA: 'Oo',
-    optionB: 'Hindi',
-    poolA: 45000,
-    poolB: 32000,
-    deadline: new Date('2026-01-01').toISOString(),
-    status: 'ongoing',
-    tags: ['#M7', '#MLBB', '#Esports']
-  },
-  {
-    id: 'e2',
-    title: 'Classic “PH vs ID” rematch ba o bagong matchup ang M7 Finals?',
-    description: 'Will the M7 Finals be a classic PH vs ID rematch or a new matchup?',
-    videoUrl: 'stream://83bc2dd0250b77ddf372c742afd0930f',
-    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/83bc2dd0250b77ddf372c742afd0930f/thumbnails/thumbnail.jpg?time=1s&height=600',
-    brandName: 'MLBB',
-    optionA: 'PH vs ID',
-    optionB: 'New Matchup',
-    poolA: 55000,
-    poolB: 48000,
-    deadline: new Date('2026-01-01').toISOString(),
-    status: 'ongoing',
-    tags: ['#M7', '#Rivalry', '#MLBB']
-  },
-  {
-    id: 'e3',
-    title: 'Mababagak ba ng M7 Finals ang peak viewership record ng M5, o hindi?',
-    description: 'Will the M7 Finals break the peak viewership record of M5?',
-    videoUrl: 'stream://22f0ce1ba4c43b2c641c5f1a7b8b2be8',
-    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/22f0ce1ba4c43b2c641c5f1a7b8b2be8/thumbnails/thumbnail.jpg?time=1s&height=600',
-    brandName: 'Esports Charts',
-    optionA: 'Oo',
-    optionB: 'Hindi',
-    poolA: 38000,
-    poolB: 41000,
-    deadline: new Date('2026-01-01').toISOString(),
-    status: 'ongoing',
-    tags: ['#Viewership', '#M7', '#Esports']
-  },
-  {
-    id: 'e4',
-    title: 'Sa linggong ito, alin ang mas mataas ang ranggo sa top-grossing chart: PUBG Mobile o Free Fire?',
-    description: 'Which game will rank higher in the top-grossing chart this week: PUBG Mobile or Free Fire?',
-    videoUrl: 'stream://bc9a0a6509c864bec69a6170a05b0e7e',
-    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/bc9a0a6509c864bec69a6170a05b0e7e/thumbnails/thumbnail.jpg?time=1s&height=600',
-    brandName: 'Mobile Games',
-    optionA: 'PUBG',
-    optionB: 'Free Fire',
-    poolA: 62000,
-    poolB: 59000,
-    deadline: new Date(Date.now() + 7 * 86400000).toISOString(),
-    status: 'ongoing',
-    tags: ['#PUBG', '#FreeFire', '#MobileGaming']
-  },
-  {
-    id: 'e5',
-    title: 'Makakakuha kaya ng higit sa 100 milyong PHP sa unang linggo ang pelikulang ito sa 2025 MMFF?',
-    description: 'Will this movie gross more than 100 million PHP in the first week of the 2025 MMFF?',
-    videoUrl: 'stream://d38b864f6b40426fae9c06c57313451e',
-    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/d38b864f6b40426fae9c06c57313451e/thumbnails/thumbnail.jpg?time=1s&height=600',
-    brandName: 'MMFF',
-    optionA: 'Oo',
-    optionB: 'Hindi',
-    poolA: 75000,
-    poolB: 28000,
-    deadline: new Date('2026-01-10').toISOString(),
-    status: 'ongoing',
-    tags: ['#MMFF', '#Movies', '#BoxOffice']
-  },
-  {
-    id: 'e6',
     title: 'Makaka-5 milyong views kaya ang susunod na video ni Ivana Alawi sa loob ng isang araw?',
     description: 'Will Ivana Alawi\'s next video reach 5 million views within a day?',
     videoUrl: 'stream://1be8184c8f4058cf6ce84ee2022b2aa6',
@@ -102,113 +28,9 @@ export const INITIAL_EVENTS: EventData[] = [
     status: 'ongoing',
     tags: ['#IvanaAlawi', '#Vlog', '#Trending']
   },
+  // 2. I'm Perfect (原 e14)
   {
-    id: 'e7',
-    title: 'Mananatili pa ba sa top 10 ng music charts ang kantang "Cup of Joe" bago mag-kalagitnaan ng Enero 2026?',
-    description: 'Will the song "Cup of Joe" remain in the top 10 music charts until mid-January 2026?',
-    videoUrl: 'stream://9812043a4157e84636ef0e209e587519',
-    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/9812043a4157e84636ef0e209e587519/thumbnails/thumbnail.jpg?time=1s&height=600',
-    brandName: 'OPM Charts',
-    optionA: 'Oo',
-    optionB: 'Hindi',
-    poolA: 42000,
-    poolB: 39000,
-    deadline: new Date('2026-01-15').toISOString(),
-    status: 'ongoing',
-    tags: ['#OPM', '#MusicCharts', '#CupOfJoe']
-  },
-  {
-    id: 'e8',
-    title: 'Papasok kaya sa top 3 ng box office ang “My Love Will Make You Disappear” bago mag-kalagitnaan ng Enero 2026?',
-    description: 'Will “My Love Will Make You Disappear” enter the top 3 box office before mid-January 2026?',
-    videoUrl: 'stream://4ab98c7798ee9d4f2a8b4074221e5003',
-    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/4ab98c7798ee9d4f2a8b4074221e5003/thumbnails/thumbnail.jpg?time=1s&height=600',
-    brandName: 'Cinema',
-    optionA: 'Oo',
-    optionB: 'Hindi',
-    poolA: 55000,
-    poolB: 48000,
-    deadline: new Date('2026-01-15').toISOString(),
-    status: 'ongoing',
-    tags: ['#KimPau', '#Movies', '#BoxOffice']
-  },
-  {
-    id: 'e9',
-    title: 'Sa susunod na Ultra Lotto draw, magkakaroon ba ng mas maraming odd o even na nanalong numero?',
-    description: 'Will there be more odd or even winning numbers in the next Ultra Lotto draw?',
-    videoUrl: 'stream://c060a4294bce9e02539172d48ebf91aa',
-    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/c060a4294bce9e02539172d48ebf91aa/thumbnails/thumbnail.jpg?time=1s&height=600',
-    brandName: 'PCSO Lotto',
-    optionA: 'Odd',
-    optionB: 'Even',
-    poolA: 95000,
-    poolB: 92000,
-    deadline: new Date(Date.now() + 86400000).toISOString(),
-    status: 'ongoing',
-    tags: ['#Lotto', '#PCSO', '#Luck']
-  },
-  {
-    id: 'e10',
-    title: 'Maaari bang lumagpas sa $100,000 ang BTC sa Enero 2026?',
-    description: 'Will BTC exceed $100,000 in January 2026?',
-    videoUrl: 'stream://6aaf0634294703e24c8d84658053c573',
-    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/6aaf0634294703e24c8d84658053c573/thumbnails/thumbnail.jpg?time=1s&height=600',
-    brandName: 'Crypto',
-    optionA: 'Oo',
-    optionB: 'Hindi',
-    poolA: 150000,
-    poolB: 120000,
-    deadline: new Date('2026-02-01').toISOString(),
-    status: 'ongoing',
-    tags: ['#Bitcoin', '#Crypto', '#Finance']
-  },
-  {
-    id: 'e11',
-    title: "Aabot ba ng ₱300M ang 'Call Me Mother' by Jan 10?",
-    description: "Will 'Call Me Mother' reach ₱300M by Jan 10?",
-    videoUrl: 'stream://b1537277c45ff9866364cf12c55b9e99',
-    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/b1537277c45ff9866364cf12c55b9e99/thumbnails/thumbnail.jpg?time=1s&height=600',
-    brandName: 'MMFF',
-    optionA: 'Oo',
-    optionB: 'Hindi',
-    poolA: 65000,
-    poolB: 52000,
-    deadline: new Date('2026-01-10').toISOString(),
-    status: 'ongoing',
-    tags: ['#MMFF', '#Movies', '#BoxOffice']
-  },
-  {
-    id: 'e12',
-    title: "May bagong 'Bigating Endorsement' bang i-aannounce si Vice Ganda by Jan 15?",
-    description: "Will Vice Ganda announce a new 'Big Endorsement' by Jan 15?",
-    videoUrl: 'stream://57f2e5e65ad33abb4b73354d10485a6a',
-    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/57f2e5e65ad33abb4b73354d10485a6a/thumbnails/thumbnail.jpg?time=1s&height=600',
-    brandName: 'Showbiz',
-    optionA: 'Oo',
-    optionB: 'Hindi',
-    poolA: 78000,
-    poolB: 24000,
-    deadline: new Date('2026-01-15').toISOString(),
-    status: 'ongoing',
-    tags: ['#ViceGanda', '#Showbiz', '#Endorsement']
-  },
-  {
-    id: 'e13',
-    title: "Eumir Marcial: Goodbye SEA Games, Hello World Title by Jan 31?",
-    description: "Eumir Marcial: Goodbye SEA Games, Hello World Title by Jan 31?",
-    videoUrl: 'stream://6e92c44b55137089467bb7fe6a2013d2',
-    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/6e92c44b55137089467bb7fe6a2013d2/thumbnails/thumbnail.jpg?time=1s&height=600',
-    brandName: 'Sports',
-    optionA: 'Oo',
-    optionB: 'Hindi',
-    poolA: 45000,
-    poolB: 38000,
-    deadline: new Date('2026-01-31').toISOString(),
-    status: 'ongoing',
-    tags: ['#Boxing', '#EumirMarcial', '#Sports']
-  },
-  {
-    id: 'e14',
+    id: 'e2',
     title: "₱200M Challenge: Kakayanin ba ng 'I'm Perfect' bago mag-Jan 15?",
     description: "₱200M Challenge: Will 'I'm Perfect' make it before Jan 15?",
     videoUrl: 'stream://06a64a744d02365dce259ce937c27d8b',
@@ -222,6 +44,199 @@ export const INITIAL_EVENTS: EventData[] = [
     status: 'ongoing',
     tags: ['#MMFF', '#Movies', '#BoxOffice']
   },
+  // 3. Call Me Mother (原 e11)
+  {
+    id: 'e3',
+    title: "Aabot ba ng ₱300M ang 'Call Me Mother' by Jan 10?",
+    description: "Will 'Call Me Mother' reach ₱300M by Jan 10?",
+    videoUrl: 'stream://b1537277c45ff9866364cf12c55b9e99',
+    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/b1537277c45ff9866364cf12c55b9e99/thumbnails/thumbnail.jpg?time=1s&height=600',
+    brandName: 'MMFF',
+    optionA: 'Oo',
+    optionB: 'Hindi',
+    poolA: 65000,
+    poolB: 52000,
+    deadline: new Date('2026-01-10').toISOString(),
+    status: 'ongoing',
+    tags: ['#MMFF', '#Movies', '#BoxOffice']
+  },
+  // 4. M7 PH Team (原 e1)
+  {
+    id: 'e4',
+    title: 'Maaari bang ipagtanggol ng isang Philippine team ang titulo sa M7 na ito？',
+    description: 'Will a Philippine team defend the title in this M7?',
+    videoUrl: 'stream://76e77896e8275bab3be03684a5bb1586',
+    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/76e77896e8275bab3be03684a5bb1586/thumbnails/thumbnail.jpg?time=1s&height=600',
+    brandName: 'MLBB M7',
+    optionA: 'Oo',
+    optionB: 'Hindi',
+    poolA: 45000,
+    poolB: 32000,
+    deadline: new Date('2026-01-01').toISOString(),
+    status: 'ongoing',
+    tags: ['#M7', '#MLBB', '#Esports']
+  },
+  // 5. PH vs ID (原 e2)
+  {
+    id: 'e5',
+    title: 'Classic "PH vs ID" rematch ba o bagong matchup ang M7 Finals?',
+    description: 'Will the M7 Finals be a classic PH vs ID rematch or a new matchup?',
+    videoUrl: 'stream://83bc2dd0250b77ddf372c742afd0930f',
+    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/83bc2dd0250b77ddf372c742afd0930f/thumbnails/thumbnail.jpg?time=1s&height=600',
+    brandName: 'MLBB',
+    optionA: 'PH vs ID',
+    optionB: 'New Matchup',
+    poolA: 55000,
+    poolB: 48000,
+    deadline: new Date('2026-01-01').toISOString(),
+    status: 'ongoing',
+    tags: ['#M7', '#Rivalry', '#MLBB']
+  },
+  // 6. M7 Viewership (原 e3)
+  {
+    id: 'e6',
+    title: 'Mababagak ba ng M7 Finals ang peak viewership record ng M5, o hindi?',
+    description: 'Will the M7 Finals break the peak viewership record of M5?',
+    videoUrl: 'stream://22f0ce1ba4c43b2c641c5f1a7b8b2be8',
+    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/22f0ce1ba4c43b2c641c5f1a7b8b2be8/thumbnails/thumbnail.jpg?time=1s&height=600',
+    brandName: 'Esports Charts',
+    optionA: 'Oo',
+    optionB: 'Hindi',
+    poolA: 38000,
+    poolB: 41000,
+    deadline: new Date('2026-01-01').toISOString(),
+    status: 'ongoing',
+    tags: ['#Viewership', '#M7', '#Esports']
+  },
+  // 7. PUBG vs Free Fire (原 e4)
+  {
+    id: 'e7',
+    title: 'Sa linggong ito, alin ang mas mataas ang ranggo sa top-grossing chart: PUBG Mobile o Free Fire?',
+    description: 'Which game will rank higher in the top-grossing chart this week: PUBG Mobile or Free Fire?',
+    videoUrl: 'stream://bc9a0a6509c864bec69a6170a05b0e7e',
+    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/bc9a0a6509c864bec69a6170a05b0e7e/thumbnails/thumbnail.jpg?time=1s&height=600',
+    brandName: 'Mobile Games',
+    optionA: 'PUBG',
+    optionB: 'Free Fire',
+    poolA: 62000,
+    poolB: 59000,
+    deadline: new Date(Date.now() + 7 * 86400000).toISOString(),
+    status: 'ongoing',
+    tags: ['#PUBG', '#FreeFire', '#MobileGaming']
+  },
+  // 8. MMFF 100M (原 e5)
+  {
+    id: 'e8',
+    title: 'Makakakuha kaya ng higit sa 100 milyong PHP sa unang linggo ang pelikulang ito sa 2025 MMFF?',
+    description: 'Will this movie gross more than 100 million PHP in the first week of the 2025 MMFF?',
+    videoUrl: 'stream://d38b864f6b40426fae9c06c57313451e',
+    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/d38b864f6b40426fae9c06c57313451e/thumbnails/thumbnail.jpg?time=1s&height=600',
+    brandName: 'MMFF',
+    optionA: 'Oo',
+    optionB: 'Hindi',
+    poolA: 75000,
+    poolB: 28000,
+    deadline: new Date('2026-01-10').toISOString(),
+    status: 'ongoing',
+    tags: ['#MMFF', '#Movies', '#BoxOffice']
+  },
+  // 9. Cup of Joe (原 e7)
+  {
+    id: 'e9',
+    title: 'Mananatili pa ba sa top 10 ng music charts ang kantang "Cup of Joe" bago mag-kalagitnaan ng Enero 2026?',
+    description: 'Will the song "Cup of Joe" remain in the top 10 music charts until mid-January 2026?',
+    videoUrl: 'stream://9812043a4157e84636ef0e209e587519',
+    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/9812043a4157e84636ef0e209e587519/thumbnails/thumbnail.jpg?time=1s&height=600',
+    brandName: 'OPM Charts',
+    optionA: 'Oo',
+    optionB: 'Hindi',
+    poolA: 42000,
+    poolB: 39000,
+    deadline: new Date('2026-01-15').toISOString(),
+    status: 'ongoing',
+    tags: ['#OPM', '#MusicCharts', '#CupOfJoe']
+  },
+  // 10. My Love Will Make You Disappear (原 e8)
+  {
+    id: 'e10',
+    title: 'Papasok kaya sa top 3 ng box office ang "My Love Will Make You Disappear" bago mag-kalagitnaan ng Enero 2026?',
+    description: 'Will "My Love Will Make You Disappear" enter the top 3 box office before mid-January 2026?',
+    videoUrl: 'stream://4ab98c7798ee9d4f2a8b4074221e5003',
+    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/4ab98c7798ee9d4f2a8b4074221e5003/thumbnails/thumbnail.jpg?time=1s&height=600',
+    brandName: 'Cinema',
+    optionA: 'Oo',
+    optionB: 'Hindi',
+    poolA: 55000,
+    poolB: 48000,
+    deadline: new Date('2026-01-15').toISOString(),
+    status: 'ongoing',
+    tags: ['#KimPau', '#Movies', '#BoxOffice']
+  },
+  // 11. Ultra Lotto (原 e9)
+  {
+    id: 'e11',
+    title: 'Sa susunod na Ultra Lotto draw, magkakaroon ba ng mas maraming odd o even na nanalong numero?',
+    description: 'Will there be more odd or even winning numbers in the next Ultra Lotto draw?',
+    videoUrl: 'stream://c060a4294bce9e02539172d48ebf91aa',
+    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/c060a4294bce9e02539172d48ebf91aa/thumbnails/thumbnail.jpg?time=1s&height=600',
+    brandName: 'PCSO Lotto',
+    optionA: 'Odd',
+    optionB: 'Even',
+    poolA: 95000,
+    poolB: 92000,
+    deadline: new Date(Date.now() + 86400000).toISOString(),
+    status: 'ongoing',
+    tags: ['#Lotto', '#PCSO', '#Luck']
+  },
+  // 12. BTC (原 e10)
+  {
+    id: 'e12',
+    title: 'Maaari bang lumagpas sa $100,000 ang BTC sa Enero 2026?',
+    description: 'Will BTC exceed $100,000 in January 2026?',
+    videoUrl: 'stream://6aaf0634294703e24c8d84658053c573',
+    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/6aaf0634294703e24c8d84658053c573/thumbnails/thumbnail.jpg?time=1s&height=600',
+    brandName: 'Crypto',
+    optionA: 'Oo',
+    optionB: 'Hindi',
+    poolA: 150000,
+    poolB: 120000,
+    deadline: new Date('2026-02-01').toISOString(),
+    status: 'ongoing',
+    tags: ['#Bitcoin', '#Crypto', '#Finance']
+  },
+  // 13. Vice Ganda (原 e12)
+  {
+    id: 'e13',
+    title: "May bagong 'Bigating Endorsement' bang i-aannounce si Vice Ganda by Jan 15?",
+    description: "Will Vice Ganda announce a new 'Big Endorsement' by Jan 15?",
+    videoUrl: 'stream://57f2e5e65ad33abb4b73354d10485a6a',
+    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/57f2e5e65ad33abb4b73354d10485a6a/thumbnails/thumbnail.jpg?time=1s&height=600',
+    brandName: 'Showbiz',
+    optionA: 'Oo',
+    optionB: 'Hindi',
+    poolA: 78000,
+    poolB: 24000,
+    deadline: new Date('2026-01-15').toISOString(),
+    status: 'ongoing',
+    tags: ['#ViceGanda', '#Showbiz', '#Endorsement']
+  },
+  // 14. Eumir Marcial (原 e13)
+  {
+    id: 'e14',
+    title: "Eumir Marcial: Goodbye SEA Games, Hello World Title by Jan 31?",
+    description: "Eumir Marcial: Goodbye SEA Games, Hello World Title by Jan 31?",
+    videoUrl: 'stream://6e92c44b55137089467bb7fe6a2013d2',
+    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/6e92c44b55137089467bb7fe6a2013d2/thumbnails/thumbnail.jpg?time=1s&height=600',
+    brandName: 'Sports',
+    optionA: 'Oo',
+    optionB: 'Hindi',
+    poolA: 45000,
+    poolB: 38000,
+    deadline: new Date('2026-01-31').toISOString(),
+    status: 'ongoing',
+    tags: ['#Boxing', '#EumirMarcial', '#Sports']
+  },
+  // 15. Kontrabida Academy (原 e15)
   {
     id: 'e15',
     title: "Tuloy ang Taray: Mag-aannounce ba ng Season 2 ang 'Kontrabida Academy' by Jan 15?",
@@ -237,6 +252,7 @@ export const INITIAL_EVENTS: EventData[] = [
     status: 'ongoing',
     tags: ['#KontrabidaAcademy', '#TV', '#Series']
   },
+  // 16. Gambling Ad Ban (原 e16)
   {
     id: 'e16',
     title: "Gaya sa Pasig: May city bang susunod sa 'Gambling Ad Ban' by Jan 10?",
@@ -252,6 +268,7 @@ export const INITIAL_EVENTS: EventData[] = [
     status: 'ongoing',
     tags: ['#News', '#Politics', '#Ban']
   },
+  // 17. Team Liquid PH (原 e17)
   {
     id: 'e17',
     title: "M7 Debut: Makaka-buena mano ba ng panalo ang Team Liquid PH?",
@@ -267,6 +284,7 @@ export const INITIAL_EVENTS: EventData[] = [
     status: 'ongoing',
     tags: ['#M7', '#TeamLiquid', '#MLBB']
   },
+  // 18. Stephen Holt (原 e18)
   {
     id: 'e18',
     title: "Holt Check: Aabot ba ng 20 Points si Stephen Holt sa Semis Game 1?",
@@ -282,6 +300,7 @@ export const INITIAL_EVENTS: EventData[] = [
     status: 'ongoing',
     tags: ['#PBA', '#StephenHolt', '#Basketball']
   },
+  // 19. Steph Curry (原 e19)
   {
     id: 'e19',
     title: "Chef Curry Special: Aabot ba ng 30+ Points si Steph ngayong New Year's Eve?",
