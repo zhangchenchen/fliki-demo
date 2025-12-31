@@ -106,6 +106,19 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
     });
   }, [isMuted, events]);
 
+  // Unlock audio on first interaction
+  useEffect(() => {
+    if (!isMuted) return;
+
+    const handleFirstInteraction = () => {
+      setIsMuted(false);
+      window.removeEventListener('pointerdown', handleFirstInteraction, true);
+    };
+
+    window.addEventListener('pointerdown', handleFirstInteraction, true);
+    return () => window.removeEventListener('pointerdown', handleFirstInteraction, true);
+  }, [isMuted]);
+
   // Handle isPaused state changes
   useEffect(() => {
     const activeRef = hlsVideoRefs.current.get(activeVideoId);
