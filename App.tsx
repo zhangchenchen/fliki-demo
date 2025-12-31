@@ -10,7 +10,23 @@ import { User, EventData, Bet, ViewState, Comment } from './types';
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User>(INITIAL_USER);
-  const [events, setEvents] = useState<EventData[]>(INITIAL_EVENTS);
+  const [events, setEvents] = useState<EventData[]>(() => {
+    // 1. Check for URL parameter to reorder feed
+    const params = new URLSearchParams(window.location.search);
+    const startVid = params.get('start_vid');
+
+    if (startVid) {
+      const targetIndex = INITIAL_EVENTS.findIndex(e => e.id === startVid);
+      if (targetIndex > -1) {
+        // Move target event to front, keep others in order
+        const targetEvent = INITIAL_EVENTS[targetIndex];
+        const remainingEvents = INITIAL_EVENTS.filter(e => e.id !== startVid);
+        return [targetEvent, ...remainingEvents];
+      }
+    }
+    // Fallback: Default order
+    return INITIAL_EVENTS;
+  });
   const [bets, setBets] = useState<Bet[]>([]);
   // Comments state kept if needed for other features, but detail view is gone
   const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS);
