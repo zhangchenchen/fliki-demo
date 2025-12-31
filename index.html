@@ -177,6 +177,24 @@
     .animate-nudge {
       animation: nudge-right 1.5s ease-in-out infinite;
     }
+
+    @keyframes bubble-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .animate-bubble-float {
+      animation: bubble-float 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce-in {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.05); opacity: 1; }
+      70% { transform: scale(0.9); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .animate-bounce-in {
+      animation: bounce-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
   </style>
   <script type="text/javascript">
     (function (c, l, a, r, i, t, y) {

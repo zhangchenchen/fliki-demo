@@ -16,6 +16,7 @@ interface VideoFeedItemProps {
     onToggleMute: (e: React.MouseEvent) => void;
     onVoteAction: (eventId: string, side: 'A' | 'B') => void;
     setHlsRef: (id: string, ref: HLSVideoHandle | null) => void;
+    showGuide?: boolean;
 }
 
 const VideoFeedItem: React.FC<VideoFeedItemProps> = memo(({
@@ -29,7 +30,8 @@ const VideoFeedItem: React.FC<VideoFeedItemProps> = memo(({
     onTogglePlay,
     onToggleMute,
     onVoteAction,
-    setHlsRef
+    setHlsRef,
+    showGuide
 }) => {
     const { multA, multB, percentA, percentB } = calculateMultipliers(event.poolA, event.poolB);
     const hasVoted = !!userBet;
@@ -117,42 +119,55 @@ const VideoFeedItem: React.FC<VideoFeedItemProps> = memo(({
 
                     {!hasVoted ? (
                         /* --- VOTING STATE --- */
-                        <div className={`
-                flex h-20 bg-zinc-950/80 backdrop-blur-lg rounded-2xl border border-white/10 overflow-hidden relative transition-all duration-500
-                ${'' /* Tooltip glow removed */}
-              `}>
-                            {/* Pulse Overlay for Guide */}
-
-
-                            {/* Option A (Left Red) */}
-                            <button
-                                onClick={(e) => { e.stopPropagation(); onVoteAction(event.id, 'A'); }}
-                                className="flex-1 bg-gradient-to-r from-red-600/40 to-transparent flex flex-col items-center justify-center active:scale-95 transition-transform z-10"
-                            >
-                                <span className="text-[10px] font-black text-red-400 mb-1 uppercase italic">TEAM {event.optionA}</span>
-                                <div className="flex items-baseline gap-1">
-                                    <span className="text-2xl font-black text-white italic">{percentA}%</span>
+                        <div className="relative">
+                            {/* Floating Guide Bubble */}
+                            {showGuide && (
+                                <div className="absolute -top-12 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
+                                    <div className="relative animate-bounce-in">
+                                        <div className="bg-white px-4 py-2 rounded-xl shadow-[0_4px_20px_rgba(255,255,255,0.3)] animate-bubble-float flex items-center gap-2 whitespace-nowrap">
+                                            <span className="text-black text-xs font-bold uppercase tracking-tight">Predict & Win</span>
+                                            <span className="text-lg">💎</span>
+                                        </div>
+                                        {/* Triangle pointer */}
+                                        <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-white" />
+                                    </div>
                                 </div>
-                            </button>
+                            )}
 
-                            {/* Center VS Divider */}
-                            <div className="w-px h-10 self-center bg-zinc-800 z-10" />
+                            <div className={`
+                    flex h-20 bg-zinc-950/80 backdrop-blur-lg rounded-2xl border border-white/10 overflow-hidden relative transition-all duration-500
+                    ${showGuide ? 'ring-2 ring-white/30 border-white/40' : ''}
+                  `}>
+                                {/* Option A (Left Red) */}
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); onVoteAction(event.id, 'A'); }}
+                                    className="flex-1 bg-gradient-to-r from-red-600/40 to-transparent flex flex-col items-center justify-center active:scale-95 transition-transform z-10"
+                                >
+                                    <span className="text-[10px] font-black text-red-400 mb-1 uppercase italic">TEAM {event.optionA}</span>
+                                    <div className="flex items-baseline gap-1">
+                                        <span className="text-2xl font-black text-white italic">{percentA}%</span>
+                                    </div>
+                                </button>
 
-                            {/* Option B (Right Blue) */}
-                            <button
-                                onClick={(e) => { e.stopPropagation(); onVoteAction(event.id, 'B'); }}
-                                className="flex-1 bg-gradient-to-l from-blue-600/40 to-transparent flex flex-col items-center justify-center active:scale-95 transition-transform z-10"
-                            >
-                                <span className="text-[10px] font-black text-blue-400 mb-1 uppercase italic">TEAM {event.optionB}</span>
-                                <div className="flex items-baseline gap-1">
-                                    <span className="text-2xl font-black text-white italic">{percentB}%</span>
+                                {/* Center VS Divider */}
+                                <div className="w-px h-10 self-center bg-zinc-800 z-10" />
+
+                                {/* Option B (Right Blue) */}
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); onVoteAction(event.id, 'B'); }}
+                                    className="flex-1 bg-gradient-to-l from-blue-600/40 to-transparent flex flex-col items-center justify-center active:scale-95 transition-transform z-10"
+                                >
+                                    <span className="text-[10px] font-black text-blue-400 mb-1 uppercase italic">TEAM {event.optionB}</span>
+                                    <div className="flex items-baseline gap-1">
+                                        <span className="text-2xl font-black text-white italic">{percentB}%</span>
+                                    </div>
+                                </button>
+
+                                {/* Bottom Progress Bar */}
+                                <div className="absolute bottom-0 left-0 right-0 h-1 bg-zinc-800 flex z-10">
+                                    <div className="h-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,1)] transition-all duration-700" style={{ width: `${percentA}%` }} />
+                                    <div className="h-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,1)] transition-all duration-700" style={{ width: `${percentB}%` }} />
                                 </div>
-                            </button>
-
-                            {/* Bottom Progress Bar */}
-                            <div className="absolute bottom-0 left-0 right-0 h-1 bg-zinc-800 flex z-10">
-                                <div className="h-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,1)] transition-all duration-700" style={{ width: `${percentA}%` }} />
-                                <div className="h-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,1)] transition-all duration-700" style={{ width: `${percentB}%` }} />
                             </div>
                         </div>
                     ) : (

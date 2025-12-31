@@ -19,6 +19,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
   const [activeVideoId, setActiveVideoId] = useState<string>(events[0]?.id || '');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
 
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -154,7 +155,15 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
     }
   }, [activeVideoId, events]);
 
-  // Check for first-time user guide logic removed
+  // Check for first-time user guide
+  useEffect(() => {
+    const hasSeenGuide = localStorage.getItem('has_seen_guide');
+    if (!hasSeenGuide) {
+      // Mark as seen immediately so it doesn't show again on re-entry/refresh
+      localStorage.setItem('has_seen_guide', 'true');
+      setShowGuide(true);
+    }
+  }, []);
 
 
   const handleVoteAction = useCallback((eventId: string, side: 'A' | 'B') => {
@@ -177,6 +186,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
       );
 
       videoVoteStatus.current.set(eventId, true);
+      setShowGuide(false);
     }
 
     onVote(eventId, side, 10);
@@ -218,6 +228,7 @@ const VideoFeed: React.FC<VideoFeedProps> = ({ events, userBets, user, onVote, o
             onToggleMute={toggleMute}
             onVoteAction={handleVoteAction}
             setHlsRef={setHlsRef}
+            showGuide={showGuide && isActive}
           />
         );
       })}
