@@ -315,6 +315,22 @@ export const INITIAL_EVENTS: EventData[] = [
     deadline: new Date('2026-01-01').toISOString(),
     status: 'ongoing',
     tags: ['#NBA', '#Curry', '#Basketball']
+  },
+  // 20. Bolts vs Tropang Giga (New)
+  {
+    id: 'e20',
+    title: 'Expert Ka Ba? Predict the Winner: Bolts or Tropang Giga?',
+    description: 'Expert Ka Ba? Predict the Winner: Bolts or Tropang Giga?',
+    videoUrl: 'stream://575ffb54e58c929265f71c8900f7ddb6',
+    posterUrl: 'https://customer-edk1yimvl6deo1m0.cloudflarestream.com/575ffb54e58c929265f71c8900f7ddb6/thumbnails/thumbnail.jpg?time=1s&height=600',
+    brandName: 'PBA',
+    optionA: 'Bolts',
+    optionB: 'Tropang Giga',
+    poolA: 45000,
+    poolB: 42000,
+    deadline: new Date('2026-01-10').toISOString(),
+    status: 'ongoing',
+    tags: ['#PBA', '#ExpertKaBa', '#Basketball']
   }
 ];
 

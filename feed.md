@@ -71,3 +71,7 @@
 19，Chef Curry Special: Aabot ba ng 30+ Points si Steph ngayong New Year's Eve?
 
 视频链接：stream://f195bd50c3a117391c3f2a49322543ec
+
+20，Expert Ka Ba? Predict the Winner: Bolts or Tropang Giga?
+
+视频链接：stream://575ffb54e58c929265f71c8900f7ddb6
