@@ -125,7 +125,7 @@ const VideoFeedItem: React.FC<VideoFeedItemProps> = memo(({
                                 <div className="absolute -top-12 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
                                     <div className="relative animate-bounce-in">
                                         <div className="bg-white px-4 py-2 rounded-xl shadow-[0_4px_20px_rgba(255,255,255,0.3)] animate-bubble-float flex items-center gap-2 whitespace-nowrap">
-                                            <span className="text-black text-xs font-bold uppercase tracking-tight">Predict & Win</span>
+                                            <span className="text-black text-xs font-bold uppercase tracking-tight">Predict & Win Real Awards</span>
                                             <span className="text-lg">💎</span>
                                         </div>
                                         {/* Triangle pointer */}
